@@ -146,4 +146,90 @@ class TodoApp {
             this.saveTodos();
             this.renderTodos();
         }
+    } filterTodos() {
+        const filterSelect = document.getElementById('filterSelect');
+        this.currentFilter = filterSelect.value;
+        this.renderTodos();
     }
+
+    getFilteredTodos() {
+        switch (this.currentFilter) {
+            case 'completed':
+                return this.todos.filter(todo => todo.completed);
+            case 'pending':
+                return this.todos.filter(todo => !todo.completed);
+            default:
+                return this.todos;
+        }
+    }
+
+    renderTodos() {
+        const todoList = document.getElementById('todoList');
+        const filteredTodos = this.getFilteredTodos();
+
+        if (filteredTodos.length === 0) {
+            todoList.innerHTML = `
+                <div class="empty-state">
+                    <p>No task found</p>
+                </div>
+            `;
+            return;
+        }
+
+        const todosHTML = filteredTodos.map(todo => `
+            <div class="todo-item ${todo.completed ? 'completed' : ''}">
+                <div class="todo-text">${this.escapeHtml(todo.text)}</div>
+                <div class="todo-date">${this.formatDate(todo.dueDate)}</div>
+                <div class="todo-status">
+                    <span class="status-badge ${todo.completed ? 'status-completed' : 'status-pending'}">
+                        ${todo.completed ? 'Completed' : 'Pending'}
+                    </span>
+                </div>
+                <div class="todo-actions">
+                    ${todo.completed 
+                        ? `<button class="action-btn undo-btn" onclick="todoApp.toggleComplete(${todo.id})">Undo</button>`
+                        : `<button class="action-btn complete-btn" onclick="todoApp.toggleComplete(${todo.id})">Complete</button>`
+                    }
+                    <button class="action-btn delete-btn" onclick="todoApp.deleteTodo(${todo.id})">Delete</button>
+                </div>
+            </div>
+        `).join('');
+
+        todoList.innerHTML = todosHTML;
+    }
+
+    formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    }
+
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    saveTodos() {
+        localStorage.setItem('todos', JSON.stringify(this.todos));
+    }
+}
+
+// Initialize the app
+const todoApp = new TodoApp();
+
+// Global functions for onclick handlers
+function addTodo() {
+    todoApp.addTodo();
+}
+
+function filterTodos() {
+    todoApp.filterTodos();
+}
+
+function deleteAllTodos() {
+    todoApp.deleteAllTodos();
+}
