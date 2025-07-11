@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="todo-app">
+            <h1>Todo List</h1>
+            
+            <!-- Input Form -->
+            <div class="input-section">
+                <input type="text" id="todoInput" placeholder="Add a todo..." maxlength="100">
+                <input type="date" id="dateInput">
+                <button id="addBtn" onclick="addTodo()">+</button>
+            </div>
+            
+            <!-- Filter and Delete All -->
+            <div class="controls">
+                <select id="filterSelect" onchange="filterTodos()">
+                    <option value="all">FILTER</option>
+                    <option value="all">All</option>
+                    <option value="completed">Completed</option>
+                    <option value="pending">Pending</option>
+                </select>
+                <button id="deleteAllBtn" onclick="deleteAllTodos()">DELETE ALL</button>
+            </div>
+            
+            <!-- Todo List Table -->
+            <div class="todo-table">
+                <div class="table-header">
+                    <div class="header-cell">TASK</div>
+                    <div class="header-cell">DUE DATE</div>
+                    <div class="header-cell">STATUS</div>
+                    <div class="header-cell">ACTIONS</div>
+                </div>
+                
+                <div id="todoList" class="todo-items">
+                    <div class="empty-state">
+                        <p>No task found</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
